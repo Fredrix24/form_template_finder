@@ -6,18 +6,14 @@ import locale
 
 class TestAppRequests(unittest.TestCase):
     def run_test(self, params):
-        # Создаем временные JSON-файлы
         params_file = "temp_params.json"
         result_file = "result.json"
 
-        # Записываем параметры в JSON-файл
         with open(params_file, "w", encoding="utf-8") as f:
             json.dump(params, f, ensure_ascii=False)
 
-        # Получаем путь к интерпретатору Python из виртуального окружения
         python_path = os.path.join(os.getcwd(), "venv", "Scripts", "python.exe")
 
-        # Запускаем app.py с указанием файла параметров
         process = subprocess.Popen(
             [python_path, "app.py", "get_tpl", "--params_file=" + params_file],
             stdout=subprocess.PIPE,
@@ -25,11 +21,9 @@ class TestAppRequests(unittest.TestCase):
         )
         stdout, stderr = process.communicate()
 
-        # Выводим stderr, если есть
         if stderr:
             print(f"Сообщение об ошибке (stderr): {stderr.decode('utf-8', errors='ignore')}")
 
-        # Проверяем код возврата
         if process.returncode != 0:
             print(f"Ошибка выполнения subprocess: Код возврата {process.returncode}")
             # Clean up files before returning
@@ -39,7 +33,6 @@ class TestAppRequests(unittest.TestCase):
                 os.remove(result_file)
             return None
 
-        # Читаем результат из JSON-файла
         try:
             with open(result_file, "r", encoding="utf-8") as f:
                 result = json.load(f)
@@ -47,7 +40,6 @@ class TestAppRequests(unittest.TestCase):
             print(f"Файл с результатом ({result_file}) не найден.")
             result = None
 
-        # Удаляем временные файлы
         if os.path.exists(params_file):
             os.remove(params_file)
         if os.path.exists(result_file):

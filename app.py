@@ -5,23 +5,19 @@ import json
 import os
 import sys
 
-# Укажем явный путь к db.json
 db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'db.json')
 
-# Удаляем db.json, если он существует
 if os.path.exists(db_path):
     os.remove(db_path)
 
 db = TinyDB(db_path)
 Form = Query()
 
-# Добавим функцию, которая будет заполнять дб если она пуста
 def create_database():
     db.insert({"name": "Проба", "f_name1": "email", "f_name2": "date"})
     db.insert({"name": "Форма заказа", "customer": "text", "order_id": "text", "дата_заказа": "date", "contact": "phone"})
     db.insert({"name": "Данные пользователя", "login": "email", "tel": "phone"})
 
-# Если db пустая, то заполняем ее
 if not db.all():
     create_database()
 
@@ -110,6 +106,5 @@ if __name__ == "__main__":
                 detected_types[key] = detect_type(value)
             result = detected_types
 
-        # Write the result to result.json
         with open("result.json", "w", encoding="utf-8") as f:
             json.dump(result, f, ensure_ascii=False)
